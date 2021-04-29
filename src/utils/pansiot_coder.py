@@ -3,8 +3,8 @@
 class PansiotCoder():
     def decode(self, coding, k, prefix=None):
         if prefix==None:
-            prefix=''.join([str(i) for i in range(k-1)])
-        alphabet=set(str(i) for i in range(k))
+            prefix=''.join([chr(ord('a') + i) for i in range(k-1)])
+        alphabet=set(chr(ord('a') + i) for i in range(k))
         first_letter=prefix[0]
         rolling_letters=set(letter for letter in prefix)
         for letter in alphabet:
@@ -26,7 +26,7 @@ class PansiotCoder():
         return word
 
 
-    def encode(self, word, k):
+    def encode(self, word, k): # for now probably not needed
         pass
 
 
