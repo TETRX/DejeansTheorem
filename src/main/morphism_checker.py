@@ -36,7 +36,6 @@ class MorphismChecker():
             e_length=math.ceil((p_length+1)/(k-1))
             for i in range(len(word_to_check)-p_length-e_length):
                 if word_to_check[i:i+e_length]==word_to_check[i+p_length:i+p_length+e_length]:
-                    print(word_to_check[i:i+p_length+e_length])
                     return False
 
         return True
@@ -50,3 +49,8 @@ if __name__=="__main__":
         "1":"1010101010101010101101101101101010101010110110110110110110110110"
     })
     print(checker.check(morphism,17))
+    bad_morphism=Morphism({
+        "0":"1111111010101010101101101011011010101010101011010110110110101101",
+        "1":"1010101010101010101101101101101010101010110110110110110110110110"
+    })
+    print(checker.check(bad_morphism,17))
