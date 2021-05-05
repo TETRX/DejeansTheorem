@@ -19,6 +19,7 @@ class MorphismChecker():
         substrings_so_far=set()
         curr_word=word_to_check[:k-1]
         i=k
+        # print("reached here")
         while i<len(word_to_check):
             if curr_word in substrings_so_far:
                 return False
@@ -29,6 +30,7 @@ class MorphismChecker():
         # 2. Do a naive iteration through all subwords pe of size such that e of size less than k-1 would be sufficient for an exponent bigger than (k+1)/k
         # k-1>|e|>|p|/(k-1)
         # |p|<(k-1)(k-1)
+        print("reached further!")
         for p_length in range((k-1)**2):
             if p_length==0:
                 continue
@@ -54,3 +56,8 @@ if __name__=="__main__":
         "1":"1010101010101010101101101101101010101010110110110110110110110110"
     })
     print(checker.check(bad_morphism,17))
+    my_morphism=Morphism({   
+        "0": "101010101010110110110110110110110110", 
+        "1": "101010101011010101101010110101101101"
+    })
+    print(checker.check(my_morphism,10))

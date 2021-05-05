@@ -3,7 +3,8 @@
 class PansiotCoder():
     def decode(self, coding, k, prefix=None):
         if prefix==None:
-            prefix=''.join([chr(ord('a') + i) for i in range(k-1)])
+            # prefix=''.join([chr(ord('a') + i) for i in range(k-1)])
+            prefix=[chr(ord('a') + i) for i in range(k-1)]
         alphabet=set(chr(ord('a') + i) for i in range(k))
         first_letter=prefix[0]
         rolling_letters=set(letter for letter in prefix)
@@ -17,13 +18,14 @@ class PansiotCoder():
         for codeletter in coding:
             i+=1
             if codeletter=="0":
-                word+=first_letter
+                word.append(first_letter)
             if codeletter=="1":
-                word+=missing_letter
+                word.append(missing_letter)
                 missing_letter=first_letter
             first_letter=word[i]
         
-        return word
+        # return word
+        return ''.join(word)
 
 
     def encode(self, word, k): # for now probably not needed
@@ -33,4 +35,4 @@ class PansiotCoder():
 if __name__=="__main__":
     coder=PansiotCoder()
     print(coder.decode("11010111011101011",3))
-    print("0120212012102120210")
+    print("abcacbcabcbacbcacba")
