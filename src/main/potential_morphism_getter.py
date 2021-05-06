@@ -37,23 +37,32 @@ class AllMophismValues():
         - seq_length - length of h(0), needs to be divisible by 4
         '''
         self.seq_length=seq_length
-        self.fake_seq=product(["D","E","F","G","H"],product("ABCCDEFGH", repeat=seq_length//4-1)) # 5*8^(k-2)
+        # self.fake_seq=product(["D","E","F","G","H"],product("ABCCDEFGH", repeat=seq_length//4-1)) # 5*8^(k-2)
+        self.first_letter=iter(["D","E","F","G","H"])
+        self.curr_first_letter=self.first_letter.__next__() #Always "D", but it sets self.first_letter() in the correct position
 
+        self.rest_of_letters=product("ABCCDEFGH", repeat=seq_length//4-1)
+        # TODO: I think the inner product is not accessed lazily causing the program to use ludicrous amounts of RAM. Fix!
+         
+    
     def __iter__(self):
         return self
 
     FORBIDDEN_TWOS={"BA","BB","BC","DA", "DB", "DC", "GA", "GB", "GC" }
     def check_conditions(self,word):
         for i in range(self.seq_length//4-2):
-            # print(word[i:i+2])
             if word[i:i+2] in AllMophismValues.FORBIDDEN_TWOS:
-                # print(word, word[i:i+2])
                 return False
         return True
 
     def get_fake_next(self):
-        unprocessed_fake_next=self.fake_seq.__next__()
-        return ''.join((unprocessed_fake_next[0],)+unprocessed_fake_next[1])
+        try:
+            letters=self.rest_of_letters.__next__()
+        except StopIteration:
+            self.curr_first_letter=self.first_letter.__next__()
+            self.rest_of_letters=product("ABCCDEFGH", repeat=self.seq_length//4-1)
+            letters=self.rest_of_letters.__next__()
+        return ''.join((self.curr_first_letter,)+letters)
 
     def get_real(self, word):
         return ''.join([AllMophismValues.FAKE_ALPHABET_TO_REAL[letter] for letter in word])
@@ -66,7 +75,6 @@ class AllMophismValues():
         real_next=self.get_real(fake_next)
         return real_next
 
-import random
 
 class PotentialMorphismGetter():
 
@@ -93,7 +101,7 @@ class PotentialMorphismGetter():
         which means cycle decomposition of sigma_k(h(x)) needs to be the same (in the sense of the length of cycles) as h(x).
         This means that sigma_k(h(0)) needs to have cycles of lengths k-1 and 1, and sigma_k(h(1)) needs to have a single cycle of length k
         '''
-        unfiltered_morphism_values=AllMophismValues(4*k)
+        unfiltered_morphism_values=AllMophismValues(4*k-4)
         perm_func=PermutationFunc(k)
 
         potential_vals={
@@ -144,6 +152,6 @@ if __name__=="__main__":
     repetition_checker=RepetitionChecker()
     pmg=PotentialMorphismGetter(morphism_checker,repetition_checker,pansiot_coder)
     import json
-    print(json.dumps(pmg.get(9)))
+    print(json.dumps(pmg.get(11)))
     print(datetime.now()-start)
     
