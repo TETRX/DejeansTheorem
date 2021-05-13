@@ -1,13 +1,17 @@
 
 
 class PansiotCoder():
+    def default_prefix(self, k):
+        return [chr(ord('a') + i) for i in range(k-1)]
+
     def decode(self, coding, k, prefix=None):
         if prefix==None:
             # prefix=''.join([chr(ord('a') + i) for i in range(k-1)])
-            prefix=[chr(ord('a') + i) for i in range(k-1)]
+            prefix=self.default_prefix(k)
+        prefix=list(prefix) # make a new reference to freely manipulate it
         alphabet=set(chr(ord('a') + i) for i in range(k))
         first_letter=prefix[0]
-        rolling_letters=set(letter for letter in prefix)
+        rolling_letters=set(letter for letter in prefix[-k+1:])
         for letter in alphabet:
             if letter not in rolling_letters:
                 missing_letter=letter
