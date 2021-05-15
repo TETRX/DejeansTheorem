@@ -1,4 +1,5 @@
-from ..utils.all_morphism_values import AllMophismValues
+# from ..utils.all_morphism_values import AllMophismValues
+from ..utils.all_morphism_values_backtracking import AllMophismValuesB
 from ..utils.permutation_func import PermutationFunc
 from .morphism_checker import MorphismChecker
 from ..utils.morphism import Morphism
@@ -32,24 +33,14 @@ class PotentialMorphismGetter():
         which means cycle decomposition of sigma_k(h(x)) needs to be the same (in the sense of the length of cycles) as h(x).
         This means that sigma_k(h(0)) needs to have cycles of lengths k-1 and 1, and sigma_k(h(1)) needs to have a single cycle of length k
         '''
-        unfiltered_morphism_values=AllMophismValues(4*k-4)
+        unfiltered_morphism_values=AllMophismValuesB(4*k-4,self.repetition_checker,self.pansiot_coder, k)
         perm_func=PermutationFunc(k)
 
         potential_vals={
             "0": [],
             "1": []
         }
-        forbidden_prefix=""
         for morphism_val in unfiltered_morphism_values:
-            if not forbidden_prefix=="" and morphism_val[0:len(forbidden_prefix)]==forbidden_prefix: # if it starts with the same prefix that had a forbidden repetition, just skip it
-                continue
-            else:
-                forbidden_prefix=""
-            pansiot_word=self.pansiot_coder.decode(morphism_val,k)
-            check=self.repetition_checker.check(pansiot_word,k)
-            if not check[0]:
-                forbidden_prefix=morphism_val[0:check[1]-k+1]
-                continue
             perm=perm_func.value(morphism_val)
             if perm.cycle_structure=={1:1, k-1:1}:
                 potential_vals["0"].append(morphism_val)
@@ -83,6 +74,6 @@ if __name__=="__main__":
     repetition_checker=RepetitionChecker()
     pmg=PotentialMorphismGetter(morphism_checker,repetition_checker,pansiot_coder)
     import json
-    print(json.dumps(pmg.get(12)))
+    print(json.dumps(pmg.get(16)))
     print(datetime.now()-start)
     

@@ -17,7 +17,7 @@ class RepetitionChecker():
                 '''
                 j>=((k-1)already_checked+i)/k
                 '''
-                forbidden_length=math.ceil((j+1)/(k-1))
+                forbidden_length=math.ceil(((j-i)+1)/(k-1))
                 if j+forbidden_length>len(word): # the word is to short to fit a forbidden repetition
                     break
                 if word[i:i+forbidden_length]==word[j:j+forbidden_length]:

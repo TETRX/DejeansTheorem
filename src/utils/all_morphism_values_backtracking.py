@@ -18,17 +18,25 @@ class AllMophismValuesB():
             # print(self.curr_val[-2:])
             if curr_val[-2:]==["0","0"]:
                 return False
+
+        # print(self.encoded_prefix, 
+        #     curr_val,
+        #     curr_val[len(self.encoded_prefix)-self.k+1:])
         encoded_word=self.pansiot_coder.decode(curr_val[len(self.encoded_prefix)-self.k+1:], self.k, prefix=self.encoded_prefix)
-        print(encoded_word)
-        self.encoded_prefix=encoded_word
-        return self.repetition_checker.check(encoded_word, self.k)
+        # print(self.pansiot_coder.decode(curr_val,self.k))
+        # print(encoded_word)
+        # check=self.repetition_checker.check(encoded_word, self.k, already_checked=len(self.encoded_prefix))
+        check=self.repetition_checker.check(encoded_word, self.k)
+        self.encoded_prefix=[letter for letter in encoded_word]
+        # print(check)
+        return check[0]
 
     def limit_prefix_length(self, limit):
         '''
         limit is the index on which the curr_val and previous curr_val definitely diverge
         '''
         if len(self.encoded_prefix)>=limit+self.k-2:
-            self.encoded_prefix=self.encoded_prefix[:limit+self.k-2]
+            self.encoded_prefix=self.encoded_prefix[:limit+self.k-1]
     
     def backtrack(self):
         while self.curr_val[-1]=="1":
@@ -64,7 +72,7 @@ if __name__=="__main__":
     from .pansiot_coder import PansiotCoder
     repetition_checker = RepetitionChecker()
     pansiot_coder = PansiotCoder()
-    am=AllMophismValuesB(12, repetition_checker, pansiot_coder,3)
+    am=AllMophismValuesB(20, repetition_checker, pansiot_coder,6)
 
     for val in am:
         print(val)
